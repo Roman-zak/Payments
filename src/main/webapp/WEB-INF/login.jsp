@@ -16,18 +16,22 @@
 <html>
 
 <body>
+<h1>User Login</h1>
 <form action="LoginController" method="post">
     <table style="with: 50%">
 
         <tr>
             <td>Email</td>
-            <td><input type="text" name="email" /></td>
+            <td><input required="required" type="email" name="email" /></td>
         </tr>
         <tr>
             <td>Password</td>
-            <td><input type="password" name="password" /></td>
+            <td><input required="required" type="password" name="password" /></td>
         </tr>
     </table>
     <input type="submit" value="Login" /></form>
+<c:if test="${not empty message}">
+    <p>${message}</p>
+</c:if>
 </body>
 </html>

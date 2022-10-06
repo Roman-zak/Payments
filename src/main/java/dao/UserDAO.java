@@ -1,6 +1,8 @@
 package dao;
 
-import com.payments.payments.controllers.DBManager;
+import db.C3p0DataSource;
+import db.DBException;
+import db.Query;
 import models.Role;
 import models.User;
 
@@ -8,15 +10,36 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static db.Query.*;
+
 public class UserDAO implements DAO<User>{
-    private final DBManager dbManager = DBManager.getInstance();
+    //private final DBManager dbManager = DBManager.getInstance();
     private List<User> users = new ArrayList<>();
     public UserDAO(){
     }
 
+    public User get(String email){
+        Connection connection = C3p0DataSource.getConnection();
+        User user = null;
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(USER_GET_BY_EMAIL);
+            statement.setString(1, String.valueOf(email));
+
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            user = new User(rs.getInt("id"), email,rs.getString("password"),
+                    rs.getString("name"),rs.getString("surname"),
+                    Role.values()[rs.getInt("role_id")],rs.getBoolean("is_blocked"));
+
+        } catch (SQLException e) {
+            System.err.println("Caught Exception: "+ e);
+        }
+        return user;
+    }
     @Override
-    public User get(int id) throws SQLException {
-        Connection connection = dbManager.getConnection();
+    public User get(int id)  {
+        Connection connection = C3p0DataSource.getConnection();
         User user = null;
 
         try {
@@ -41,8 +64,8 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public void save(User user) throws SQLException {
-        Connection con = dbManager.getConnection();
+    public void save(User user) throws DBException {
+        Connection con = C3p0DataSource.getConnection();
         PreparedStatement preparedStatement = null;
         try {
            // con = dbManager.getConnection();
@@ -62,21 +85,28 @@ public class UserDAO implements DAO<User>{
             preparedStatement.close();
         } catch (SQLException e) {
            // LOGGER.warn(e.getMessage());
-            con.rollback();
-            System.err.println(e);
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw  new DBException("Failed to rollback", ex);
+            }
+            throw  new DBException("Failed to add user", e);
         }
-//        finally {
-//            preparedStatement.close();
-//        }
     }
-    private void setGeneratedUserId(User user, PreparedStatement stmt) throws SQLException {
-        ResultSet generatedKeys = stmt.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            user.setId(generatedKeys.getInt(1));
+    private void setGeneratedUserId(User user, PreparedStatement stmt) throws DBException {
+        ResultSet generatedKeys = null;
+        try {
+            generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                user.setId(generatedKeys.getInt(1));
+            }
+            else {
+                throw new DBException("Creating user failed, no ID obtained.");
+            }
+        } catch (SQLException e) {
+            throw new DBException("Creating user failed, no ID obtained.", e);
         }
-        else {
-            throw new SQLException("Creating user failed, no ID obtained.");
-        }
+
     }
     @Override
     public void update(User user, String[] params) {

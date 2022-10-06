@@ -9,8 +9,9 @@
 <h1><%= "Payments" %>
 </h1>
 <br/>
-<p><c:if test="${sessionScope.user!=null}"><c:out value="${sessionScope.user}"/></c:if>
+<p><c:if test="${sessionScope.user!=null}"><c:out value="${sessionScope.user.email}"/></c:if>
 </p>
-<a href="hello-servlet1">Hello Servlet</a>
+<a href="LoginController">Log in</a>
+<a href="RegisterController">Sign up</a>
 </body>
 </html>

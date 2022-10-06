@@ -14,24 +14,24 @@
   <jsp:include page="fragments/header.jsp"/>
 </head>
 <body>
-<h1>User Register Form</h1>
+<h1>User Register</h1>
 <form action="RegisterController" method="post">
   <table style="with: 20%">
     <tr>
       <td>First Name</td>
-      <td><input type="text" name="name" /></td>
+      <td><input required="required" type="text" name="name" /></td>
     </tr>
     <tr>
       <td>Last Name</td>
-      <td><input type="text" name="surname" /></td>
+      <td><input required="required" type="text" name="surname" /></td>
     </tr>
     <tr>
-      <td>UserName</td>
-      <td><input type="text" name="email" /></td>
+      <td>Email</td>
+      <td><input required="required" type="email" name="email" /></td>
     </tr>
     <tr>
       <td>Password</td>
-      <td><input type="password" name="password" /></td>
+      <td><input required="required" type="password" name="password" /></td>
     </tr>
   </table>
   <input type="submit" value="Submit" /></form>

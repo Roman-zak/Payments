@@ -1,4 +1,4 @@
-package dao;
+package db;
 
 public class Constants {
     public static final String PAYMENTS_CONNECTION_URL= "jdbc:mysql://localhost:3306/paymentsdb";

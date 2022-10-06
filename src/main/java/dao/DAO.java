@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface DAO<T> {
 
-    T get(int id) throws SQLException;
+    T get(int id) ;
 
     List<T> getAll();
 
-    void save(T t) throws SQLException;
+    void save(T t) ;
 
     void update(T t, String[] params);
 

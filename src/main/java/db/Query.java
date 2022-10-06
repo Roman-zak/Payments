@@ -1,4 +1,4 @@
-package dao;
+package db;
 
 public class Query {
         public static final String USER_EXIST_BY_LOGIN = "select * from user_entity where email = ?";
@@ -6,6 +6,7 @@ public class Query {
         public static final String USER_UPDATE = "update user_entity set name = ?, surname = ?, email = ? , password = ?, role =?, status = ?  where id = ?";
         public static final String USER_DELETE = "delete from user_entity where  id = ?";
         public static final String USER_GET_BY_ID = "select * from user_entity where id= ?";
+        public static final String USER_GET_BY_EMAIL = "select * from user where email= ?";
         public static final String USER_GET_ALL = "select * from user_entity ";
         public static final String ROLE_GET_BY_NAME = "select * from user_role where name = ?";
         public static final String ROLE_GET_BY_ID = "select * from user_role where id = ?";

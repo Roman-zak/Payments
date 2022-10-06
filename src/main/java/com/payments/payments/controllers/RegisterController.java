@@ -32,11 +32,7 @@ public class RegisterController extends HttpServlet {
         } else if (password == null || password.isEmpty()) {
             resp.sendError(400, "Password can't be empty");
         } else {
-            try {
             userDAO.save(user);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
             req.getSession().setAttribute("user", user);
             resp.sendRedirect("/");
         }
