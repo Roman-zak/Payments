@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@WebServlet(name = "LoginController", value = "/LoginController")
+@WebServlet(name = "login", value = "/login")
 public class LoginController extends HttpServlet {
     private final Logger logger = Logger.getLogger(LoginController.class);
 

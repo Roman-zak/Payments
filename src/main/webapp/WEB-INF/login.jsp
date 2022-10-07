@@ -16,8 +16,9 @@
 <html>
 
 <body>
+<jsp:include page="fragments/nav-header.jsp"/>
 <h1>User Login</h1>
-<form action="LoginController" method="post">
+<form action="/login" method="post">
     <table style="with: 50%">
 
         <tr>

@@ -12,7 +12,7 @@ import models.User;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet(name = "RegisterController", value = "/RegisterController")
+@WebServlet(name = "register", value = "/register")
 public class RegisterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

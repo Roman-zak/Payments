@@ -3,15 +3,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <jsp:include page="WEB-INF/fragments/header.jsp"/>
 </head>
 <body>
+<jsp:include page="WEB-INF/fragments/nav-header.jsp"/>
 <h1><%= "Payments" %>
 </h1>
 <br/>
 <p><c:if test="${sessionScope.user!=null}"><c:out value="${sessionScope.user.email}"/></c:if>
 </p>
-<a href="LoginController">Log in</a>
-<a href="RegisterController">Sign up</a>
 </body>
 </html>

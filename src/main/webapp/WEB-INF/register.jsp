@@ -14,8 +14,9 @@
   <jsp:include page="fragments/header.jsp"/>
 </head>
 <body>
+<jsp:include page="fragments/nav-header.jsp"/>
 <h1>User Register</h1>
-<form action="RegisterController" method="post">
+<form action="/register" method="post">
   <table style="with: 20%">
     <tr>
       <td>First Name</td>
