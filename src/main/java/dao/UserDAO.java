@@ -18,7 +18,7 @@ public class UserDAO implements DAO<User>{
     public UserDAO(){
     }
 
-    public User get(String email){
+    public User get(String email) throws DBException{
         Connection connection = C3p0DataSource.getConnection();
         User user = null;
 
@@ -30,15 +30,15 @@ public class UserDAO implements DAO<User>{
             rs.next();
             user = new User(rs.getInt("id"), email,rs.getString("password"),
                     rs.getString("name"),rs.getString("surname"),
-                    Role.values()[rs.getInt("role_id")],rs.getBoolean("is_blocked"));
+                    Role.values()[rs.getInt("role_id")-1],rs.getBoolean("is_blocked"));
 
         } catch (SQLException e) {
-            System.err.println("Caught Exception: "+ e);
+           throw new DBException("Failed to get user", e);
         }
         return user;
     }
     @Override
-    public User get(int id)  {
+    public User get(int id)  throws DBException{
         Connection connection = C3p0DataSource.getConnection();
         User user = null;
 
@@ -53,7 +53,7 @@ public class UserDAO implements DAO<User>{
                     rs.getString("name"),rs.getString("surname"), Role.USER,false);
 
         } catch (SQLException e) {
-            System.err.println("Caught Exception: "+ e);
+            throw new DBException("Failed to get user", e);
         }
         return user;
     }

@@ -2,6 +2,7 @@ package com.payments.payments.controllers;
 
 import dao.DAO;
 import dao.UserDAO;
+import db.DBException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -33,7 +34,8 @@ public class LoginController extends HttpServlet {
         } else if (password == null || password.isEmpty()) {
             resp.sendError(400, "Password can't be empty");
         } else {
-            UserService userService = UserService.getInstance();
+            try{
+                UserService userService = UserService.getInstance();
                 if(userService.isRegistered(email, password)){
                     User user = userService.get(email);
                     req.getSession().setAttribute("user", user);
@@ -42,7 +44,14 @@ public class LoginController extends HttpServlet {
                     req.getSession().setAttribute("message", "Wrong login data.");
                     req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
                 }
+            } catch (DBException e){
+                logger.warn("Incorrect password or login");
+                logger.debug("start forwarding to login page");
+                req.getSession().setAttribute("message", "Wrong login data.");
+                req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
 
+             //   resp.sendError(403, "Incorrect password or login");
+            }
         }
     }
 }

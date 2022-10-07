@@ -2,6 +2,7 @@ package com.payments.payments.controllers;
 
 import dao.DAO;
 import dao.UserDAO;
+import db.DBException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -32,7 +33,11 @@ public class RegisterController extends HttpServlet {
         } else if (password == null || password.isEmpty()) {
             resp.sendError(400, "Password can't be empty");
         } else {
-            userDAO.save(user);
+            try {
+                userDAO.save(user);
+            } catch (DBException e) {
+                resp.sendError(403, "Was unable to register this user.");
+            }
             req.getSession().setAttribute("user", user);
             resp.sendRedirect("/");
         }
