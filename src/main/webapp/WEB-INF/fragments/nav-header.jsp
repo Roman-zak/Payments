@@ -17,17 +17,27 @@
 
 <nav class="navbar sticky-top navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="${pageContext.request.contextPath}/">Home</a>
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/">
+      Home
+    </a>
     <div class="nav-item">
       <c:if test="${sessionScope.user != null}">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/user">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/profile">
            My Profile </a>
       </c:if>
     </div>
     <div class="nav-item">
-      <c:if test="${sessionScope.user != null && sessionScope.user.role == Role.Admin}">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/admin">
-          Admin</a>
+      <c:if test="${sessionScope.user != null}">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/paymentsArchive">
+          My payments
+        </a>
+      </c:if>
+    </div>
+    <div class="nav-item">
+      <c:if test="${sessionScope.user != null && sessionScope.user.role == 'ADMIN'}">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/adminPage">
+          Admin
+        </a>
       </c:if>
     </div>
     <div class="nav-item">

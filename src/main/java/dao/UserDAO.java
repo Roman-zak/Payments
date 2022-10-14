@@ -21,21 +21,23 @@ public class UserDAO implements DAO<User>{
     public User get(String email) throws DBException{
         Connection connection = C3p0DataSource.getConnection();
         User user = null;
-
         try {
             PreparedStatement statement = connection.prepareStatement(USER_GET_BY_EMAIL);
-            statement.setString(1, String.valueOf(email));
+            statement.setString(1, email);
 
             ResultSet rs = statement.executeQuery();
             rs.next();
+            Role role;
             user = new User(rs.getInt("id"), email,rs.getString("password"),
                     rs.getString("name"),rs.getString("surname"),
-                    Role.values()[rs.getInt("role_id")-1],rs.getBoolean("is_blocked"));
-
+                    idToRole(rs.getInt("role_id")),rs.getBoolean("is_blocked"));
         } catch (SQLException e) {
            throw new DBException("Failed to get user", e);
         }
         return user;
+    }
+    private Role idToRole(int id){
+        return id==1? Role.USER:Role.ADMIN;
     }
     @Override
     public User get(int id)  throws DBException{
@@ -50,7 +52,7 @@ public class UserDAO implements DAO<User>{
             rs.next();
 
             user = new User(id, rs.getString("email"),rs.getString("password"),
-                    rs.getString("name"),rs.getString("surname"), Role.USER,false);
+                    rs.getString("name"),rs.getString("surname"), idToRole(rs.getInt("role_id")),false);
 
         } catch (SQLException e) {
             throw new DBException("Failed to get user", e);
@@ -59,8 +61,23 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public List<User> getAll() {
-        return null;
+    public List<User> getAll() throws DBException {
+        Connection connection = C3p0DataSource.getConnection();
+        List<User> users = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(USER_GET_ALL);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                User user = new User(rs.getInt("id"), rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("name"),rs.getString("surname"),
+                        idToRole(rs.getInt("role_id")),rs.getBoolean("is_blocked"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Failed to get users", e);
+        }
+        return users;
     }
 
     @Override

@@ -4,29 +4,45 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Account implements Serializable {
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountNo='" + accountNo + '\'' +
+                ", currency='" + currency + '\'' +
+                ", balance=" + balance +
+                ", card=" + card +
+                ", ownerName='" + ownerName + '\'' +
+                ", ownerPhone='" + ownerPhone + '\'' +
+                ", ownerAddress='" + ownerAddress + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", blocked=" + blocked +
+                '}';
+    }
+
     private int id;
+    private String accountNo;
     private String currency;
     private double balance;
     private Card card;
     private String ownerName;
     private String ownerPhone;
-    private String ownerAdress;
+    private String ownerAddress;
     private String postalCode;
     private boolean blocked;
 
     public Account() {
     }
 
-    public Account(int id, String currency, double balance, Card card, String ownerName, String ownerPhone, String ownerAdress, String postalCode, boolean blocked) {
-        this.id = id;
+    public Account(String accountNo, String currency, double balance, Card card, String ownerName, String ownerPhone, String ownerAddress, String postalCode) {
+        this.accountNo = accountNo;
         this.currency = currency;
         this.balance = balance;
         this.card = card;
         this.ownerName = ownerName;
         this.ownerPhone = ownerPhone;
-        this.ownerAdress = ownerAdress;
+        this.ownerAddress = ownerAddress;
         this.postalCode = postalCode;
-        this.blocked = blocked;
     }
 
     public int getId() {
@@ -77,12 +93,12 @@ public class Account implements Serializable {
         this.ownerPhone = ownerPhone;
     }
 
-    public String getOwnerAdress() {
-        return ownerAdress;
+    public String getOwnerAddress() {
+        return ownerAddress;
     }
 
-    public void setOwnerAdress(String ownerAdress) {
-        this.ownerAdress = ownerAdress;
+    public void setOwnerAddress(String ownerAddress) {
+        this.ownerAddress = ownerAddress;
     }
 
     public String getPostalCode() {
@@ -101,31 +117,26 @@ public class Account implements Serializable {
         this.blocked = blocked;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", currency='" + currency + '\'' +
-                ", balance=" + balance +
-                ", card=" + card +
-                ", ownerName='" + ownerName + '\'' +
-                ", ownerPhone='" + ownerPhone + '\'' +
-                ", ownerAdress='" + ownerAdress + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", blocked=" + blocked +
-                '}';
-    }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Account)) return false;
         Account account = (Account) o;
-        return Double.compare(account.balance, balance) == 0 && Objects.equals(currency, account.currency) && Objects.equals(card, account.card) && Objects.equals(ownerName, account.ownerName) && Objects.equals(ownerPhone, account.ownerPhone) && Objects.equals(ownerAdress, account.ownerAdress) && Objects.equals(postalCode, account.postalCode);
+        return Double.compare(account.balance, balance) == 0 && Objects.equals(currency, account.currency) && Objects.equals(card, account.card) && Objects.equals(ownerName, account.ownerName) && Objects.equals(ownerPhone, account.ownerPhone) && Objects.equals(ownerAddress, account.ownerAddress) && Objects.equals(postalCode, account.postalCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currency, balance, card, ownerName, ownerPhone, ownerAdress, postalCode);
+        return Objects.hash(currency, balance, card, ownerName, ownerPhone, ownerAddress, postalCode);
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
     }
 }

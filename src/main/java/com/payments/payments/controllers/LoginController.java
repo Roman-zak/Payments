@@ -6,7 +6,9 @@ import db.DBException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import models.Account;
 import models.User;
+import services.AccountService;
 import services.UserService;
 import org.apache.log4j.Logger;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
-        logger.debug("get login");
+
     }
 
     @Override
@@ -36,8 +38,10 @@ public class LoginController extends HttpServlet {
         } else {
             try{
                 UserService userService = UserService.getInstance();
+                AccountService accountService = AccountService.getInstance();
                 if(userService.isRegistered(email, password)){
                     User user = userService.get(email);
+                    user.setAccounts(accountService.getUserAccounts(user));
                     req.getSession().setAttribute("user", user);
                     resp.sendRedirect("/");
                 } else {

@@ -6,4 +6,13 @@
     <error-page>
         <location>/WEB-INF/error-page.jsp</location>
     </error-page>
+
+<!--    <filter>-->
+<!--        <filter-name>FilterUserRole</filter-name>-->
+<!--        <filter-class>filters.FilterUserRole</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>FilterUserRole</filter-name>-->
+<!--        <url-pattern>/adminPage</url-pattern>-->
+<!--    </filter-mapping>-->
 </web-app>

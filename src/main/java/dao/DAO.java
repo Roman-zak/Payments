@@ -9,7 +9,7 @@ public interface DAO<T> {
 
     T get(int id) throws DBException;
 
-    List<T> getAll();
+    List<T> getAll() throws DBException;
 
     void save(T t) throws DBException;
 

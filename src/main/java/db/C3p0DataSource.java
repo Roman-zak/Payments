@@ -7,23 +7,24 @@ import java.sql.SQLException;
 
 public class C3p0DataSource {
     private static ComboPooledDataSource cpds = new ComboPooledDataSource();
-        public static Connection getConnection() throws  DBException {
-        Connection con = null;
-
+    static {
         try {
             cpds.setDriverClass("com.mysql.cj.jdbc.Driver");
             cpds.setJdbcUrl(Constants.PAYMENTS_CONNECTION_URL);
             cpds.setUser(Constants.PAYMENTS_DB_USER);
             cpds.setPassword(Constants.PAYMENTS_DB_PASSWORD);
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
+    }
+        public static Connection getConnection() throws  DBException {
+        Connection con = null;
+        try {
             con = cpds.getConnection();
             con.setAutoCommit(false);
         } catch (SQLException e) {
             throw new DBException("Failed to get connection");
-        } catch (PropertyVetoException e) {
-            throw new DBException("Connection pool exception");
-
         }
-
         return con;
     }
 

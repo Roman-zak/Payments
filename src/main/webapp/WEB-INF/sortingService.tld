@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>sortingService</short-name>
+    <uri>sortingService</uri>
+    <function>
+        <name>sortByNumber</name>
+        <function-class>services.AccountService</function-class>
+        <function-signature>java.util.List sortByNumber(java.util.List)</function-signature>
+    </function>
+    <function>
+        <name>sortByName</name>
+        <function-class>services.AccountService</function-class>
+        <function-signature>java.util.List sortByName(java.util.List)</function-signature>
+    </function>
+    <function>
+        <name>sortByBalance</name>
+        <function-class>services.AccountService</function-class>
+        <function-signature>java.util.List sortByBalance(java.util.List)</function-signature>
+    </function>
+
+    <function>
+        <name>sortPaymentsByNumber</name>
+        <function-class>services.PaymentService</function-class>
+        <function-signature>java.util.List sortByNumber(java.util.List)</function-signature>
+    </function>
+    <function>
+        <name>sortPaymentsByDate</name>
+        <function-class>services.PaymentService</function-class>
+        <function-signature>java.util.List sortByDate(java.util.List)</function-signature>
+    </function>
+
+
+    <!-- Invoke 'Generate' action to add tags or functions -->
+
+</taglib>

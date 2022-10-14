@@ -22,6 +22,7 @@ public class User implements Serializable {
         this.surname = surname;
         this.role = role;
         this.blocked = blocked;
+
     }
 
     public List<Account> getAccounts() {

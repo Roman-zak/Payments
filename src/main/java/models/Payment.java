@@ -7,21 +7,41 @@ import java.util.Objects;
 public class Payment implements Serializable {
     private int id;
     private double sum;
-    private Account payerAccount;
+    private int payerAccountId;
+    private String payerAccountNumber;
     private String recipientAccountNo;
     private String recipientName;
+    private PaymentStatus status;
+    private LocalDateTime timeStamp;
+
+
+    public Payment(double sum, int payerAccountId, String recipientAccountNo) {
+        this.sum = sum;
+        this.payerAccountId = payerAccountId;
+        this.recipientAccountNo = recipientAccountNo;
+    }
+
+    public Payment(double sum, int payerAccountId, String payerAccountNumber, String recipientAccountNo, String recipientName, PaymentStatus status, LocalDateTime timeStamp) {
+        this.sum = sum;
+        this.payerAccountId = payerAccountId;
+        this.payerAccountNumber = payerAccountNumber;
+        this.recipientAccountNo = recipientAccountNo;
+        this.recipientName = recipientName;
+        this.status = status;
+        this.timeStamp = timeStamp;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Payment)) return false;
         Payment payment = (Payment) o;
-        return Double.compare(payment.sum, sum) == 0 && Objects.equals(payerAccount, payment.payerAccount) && Objects.equals(recipientAccountNo, payment.recipientAccountNo) && Objects.equals(recipientName, payment.recipientName);
+        return Double.compare(payment.sum, sum) == 0 && Objects.equals(payerAccountId, payment.payerAccountId) && Objects.equals(recipientAccountNo, payment.recipientAccountNo) && Objects.equals(recipientName, payment.recipientName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sum, payerAccount, recipientAccountNo, recipientName);
+        return Objects.hash(sum, payerAccountId, recipientAccountNo, recipientName);
     }
 
     @Override
@@ -29,7 +49,7 @@ public class Payment implements Serializable {
         return "Payment{" +
                 "id=" + id +
                 ", sum=" + sum +
-                ", payerAccount=" + payerAccount +
+                ", payerAccount=" + payerAccountId +
                 ", recipientAccountNo='" + recipientAccountNo + '\'' +
                 ", recipientName='" + recipientName + '\'' +
                 ", status=" + status +
@@ -37,16 +57,14 @@ public class Payment implements Serializable {
                 '}';
     }
 
-    private PaymentStatus status;
-    private LocalDateTime timeStamp;
 
     public Payment() {
     }
 
-    public Payment(int id, double sum, Account payerAccount, String recipientAccountNo, String recipientName, PaymentStatus status, LocalDateTime timeStamp) {
+    public Payment(int id, double sum, int payerAccountId, String recipientAccountNo, String recipientName, PaymentStatus status, LocalDateTime timeStamp) {
         this.id = id;
         this.sum = sum;
-        this.payerAccount = payerAccount;
+        this.payerAccountId = payerAccountId;
         this.recipientAccountNo = recipientAccountNo;
         this.recipientName = recipientName;
         this.status = status;
@@ -69,12 +87,12 @@ public class Payment implements Serializable {
         this.sum = sum;
     }
 
-    public Account getPayerAccount() {
-        return payerAccount;
+    public int getPayerAccountId() {
+        return payerAccountId;
     }
 
-    public void setPayerAccount(Account payerAccount) {
-        this.payerAccount = payerAccount;
+    public void setPayerAccountId(int payerAccountId) {
+        this.payerAccountId = payerAccountId;
     }
 
     public String getRecipientAccountNo() {
@@ -107,5 +125,13 @@ public class Payment implements Serializable {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getPayerAccountNumber() {
+        return payerAccountNumber;
+    }
+
+    public void setPayerAccountNumber(String payerAccountNumber) {
+        this.payerAccountNumber = payerAccountNumber;
     }
 }
