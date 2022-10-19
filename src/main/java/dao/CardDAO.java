@@ -1,20 +1,16 @@
 package dao;
 
-import com.payments.payments.controllers.LoginController;
-import db.C3p0DataSource;
+import db.DBCPDataSource;
 import db.DBException;
 import db.Query;
 import models.Account;
 import models.Card;
-import models.Role;
-import models.User;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
 
 import static db.Query.CARD_GET_BY_ACCOUNT_ID;
-import static db.Query.USER_GET_BY_EMAIL;
 
 public class CardDAO implements DAO{
     private final Logger logger = Logger.getLogger(CardDAO.class);
@@ -31,7 +27,7 @@ public class CardDAO implements DAO{
 
     @Override
     public void save(Object o) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         Card card = (Card) o;
         try {
@@ -89,7 +85,7 @@ public class CardDAO implements DAO{
         }
     }
     public Card getByAccountId(int accountId) throws DBException{
-        Connection connection = C3p0DataSource.getConnection();
+        Connection connection = DBCPDataSource.getConnection();
         Card card = null;
 
         try {

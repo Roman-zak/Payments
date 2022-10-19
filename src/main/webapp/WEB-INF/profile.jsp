@@ -89,17 +89,16 @@
                                   <td><c:out value="${account.card.expMonth}" />/<c:out value="${account.card.expYear}" /></td>
 <%--                              </c:if>--%>
                               <td><form action="/replenish" method="get"><input type="hidden" value="${account.accountNo}" name="replenishAccountNo"><input type="submit" class="btn btn-primary" value="replenish"></form></td>
-
                               <td>
                                   <form action="/accountStatus" method="post">
                                       <input type="hidden" name="accountNo" value="${account.accountNo}">
                                       <input type="hidden" name="blocked" value="${account.blocked}">
-                                      <input type="submit" class="btn btn-primary" <c:if test="${account.blocked==false}">value="block"</c:if>
-                                             <c:if test="${account.blocked==true}">value="unblock"</c:if>>
+                                      <input type="submit" class="btn btn-primary"
+                                             <c:if test="${account.blocked==false}">value="block"</c:if>
+                                             <c:if test="${account.blocked==true}">value="unblock"</c:if>
+                                      >
                                   </form>
                               </td>
-
-
                           </tr>
                       </c:forEach>
                   </c:when>
@@ -117,12 +116,16 @@
                                   <td><c:out value="${account.card.expMonth}" />/<c:out value="${account.card.expYear}" /></td>
 <%--                              </c:if>--%>
                               <td><form action="/replenish" method="get"><input type="hidden" value="${account.accountNo}" name="replenishAccountNo"><input type="submit" class="btn btn-primary" value="replenish"></form></td>
-                              <c:if test="${account.blocked==false}">
-                                  <td><form action="/blockAcc" method="post"><input type="submit" class="btn btn-primary" value="block"></form></td>
-                              </c:if>
-                              <c:if test="${account.blocked==true}">
-                                  <td><form action="/unblockAccReq" method="post"><input type="submit" class="btn btn-primary" value="unblock"></form></td>
-                              </c:if>
+                              <td>
+                                  <form action="/accountStatus" method="post">
+                                      <input type="hidden" name="accountNo" value="${account.accountNo}">
+                                      <input type="hidden" name="blocked" value="${account.blocked}">
+                                      <input type="submit" class="btn btn-primary"
+                                             <c:if test="${account.blocked==false}">value="block"</c:if>
+                                             <c:if test="${account.blocked==true}">value="unblock"</c:if>
+                                      >
+                                  </form>
+                              </td>
                           </tr>
                       </c:forEach>
                   </c:when>
@@ -140,12 +143,16 @@
                                   <td><c:out value="${account.card.expMonth}" />/<c:out value="${account.card.expYear}" /></td>
 <%--                              </c:if>--%>
                               <td><form action="/replenish" method="get"><input type="hidden" value="${account.accountNo}" name="replenishAccountNo"><input type="submit" class="btn btn-primary" value="replenish"></form></td>
-                              <c:if test="${account.blocked==false}">
-                                  <td><form action="/blockAcc" method="post"><input type="submit" class="btn btn-primary" value="block"></form></td>
-                              </c:if>
-                              <c:if test="${account.blocked==true}">
-                                  <td><form action="/unblockAccReq" method="post"><input type="submit" class="btn btn-primary" value="unblock"></form></td>
-                              </c:if>
+                              <td>
+                                  <form action="/accountStatus" method="post">
+                                      <input type="hidden" name="accountNo" value="${account.accountNo}">
+                                      <input type="hidden" name="blocked" value="${account.blocked}">
+                                      <input type="submit" class="btn btn-primary"
+                                             <c:if test="${account.blocked==false}">value="block"</c:if>
+                                             <c:if test="${account.blocked==true}">value="unblock"</c:if>
+                                      >
+                                  </form>
+                              </td>
                           </tr>
                       </c:forEach>
                   </c:when>

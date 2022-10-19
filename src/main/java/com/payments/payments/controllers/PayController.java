@@ -80,6 +80,7 @@ public class PayController extends HttpServlet {
             request.getSession().setAttribute("lastPaymentMessage",
                     "Payment was not performed, try latter please.");
         }
-        request.getRequestDispatcher("/").forward(request, response);
+        response.sendRedirect("/");
+        //request.getRequestDispatcher("/").forward(request, response);
     }
 }

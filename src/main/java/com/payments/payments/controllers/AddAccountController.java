@@ -67,8 +67,8 @@ public class AddAccountController extends HttpServlet {
                 response.sendError(403, "Was unable to add this account.");
             }
             ((User)request.getSession().getAttribute("user")).getAccounts().add(account);
-           // response.sendRedirect("WEB-INF/profile.jsp");
-            request.getRequestDispatcher("WEB-INF/profile.jsp").forward(request, response);
+            response.sendRedirect("WEB-INF/profile.jsp");
+            //request.getRequestDispatcher("WEB-INF/profile.jsp").forward(request, response);
         }
 
     }

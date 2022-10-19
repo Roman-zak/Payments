@@ -1,25 +1,31 @@
 package dao;
 
-import db.C3p0DataSource;
+import db.DBCPDataSource;
 import db.DBException;
 import db.Query;
 import models.Role;
 import models.User;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static db.Query.*;
 
 public class UserDAO implements DAO<User>{
-    //private final DBManager dbManager = DBManager.getInstance();
+    private final Logger logger = Logger.getLogger(CardDAO.class);
+
     private List<User> users = new ArrayList<>();
+    private int noOfRecords;
+
     public UserDAO(){
     }
 
     public User get(String email) throws DBException{
-        Connection connection = C3p0DataSource.getConnection();
+        Connection connection = DBCPDataSource.getConnection();
         User user = null;
         try {
             PreparedStatement statement = connection.prepareStatement(USER_GET_BY_EMAIL);
@@ -41,18 +47,16 @@ public class UserDAO implements DAO<User>{
     }
     @Override
     public User get(int id)  throws DBException{
-        Connection connection = C3p0DataSource.getConnection();
+        Connection connection = DBCPDataSource.getConnection();
         User user = null;
 
         try {
-            PreparedStatement statement = connection.prepareStatement("select * from Users where id = ?");
+            PreparedStatement statement = connection.prepareStatement(USER_FIND_BY_ID);
             statement.setString(1, String.valueOf(id));
-
             ResultSet rs = statement.executeQuery();
             rs.next();
-
             user = new User(id, rs.getString("email"),rs.getString("password"),
-                    rs.getString("name"),rs.getString("surname"), idToRole(rs.getInt("role_id")),false);
+                    rs.getString("name"),rs.getString("surname"), idToRole(rs.getInt("role_id")), rs.getBoolean("is_blocked"));
 
         } catch (SQLException e) {
             throw new DBException("Failed to get user", e);
@@ -62,7 +66,7 @@ public class UserDAO implements DAO<User>{
 
     @Override
     public List<User> getAll() throws DBException {
-        Connection connection = C3p0DataSource.getConnection();
+        Connection connection = DBCPDataSource.getConnection();
         List<User> users = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(USER_GET_ALL);
@@ -82,7 +86,7 @@ public class UserDAO implements DAO<User>{
 
     @Override
     public void save(User user) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         try {
            // con = dbManager.getConnection();
@@ -101,7 +105,7 @@ public class UserDAO implements DAO<User>{
             con.commit();
             preparedStatement.close();
         } catch (SQLException e) {
-           // LOGGER.warn(e.getMessage());
+            logger.warn(e.getMessage());
             try {
                 con.rollback();
             } catch (SQLException ex) {
@@ -133,5 +137,67 @@ public class UserDAO implements DAO<User>{
     @Override
     public void delete(User user) {
 
+    }
+
+    public Map.Entry<List<User>, Integer> getAllWithLimit(int offset, int noOfRecords) throws DBException {
+        String query = "select SQL_CALC_FOUND_ROWS * from user limit " + offset + ", " + noOfRecords;
+        Connection connection = DBCPDataSource.getConnection();
+        List<User> users = new ArrayList<>();
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()){
+                User user = new User(rs.getInt("id"), rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("name"),rs.getString("surname"),
+                        idToRole(rs.getInt("role_id")),rs.getBoolean("is_blocked"));
+                users.add(user);
+            }
+            rs.close();
+            rs = stmt.executeQuery("SELECT FOUND_ROWS()");
+
+            if (rs.next())
+                this.noOfRecords = rs.getInt(1);
+        } catch (SQLException ex) {
+            throw new DBException("Failed to get users", ex);
+        }
+        Map<List<User>, Integer> res = new HashMap<>();
+        res.put(users,this.noOfRecords );
+        for ( Map.Entry<List<User>, Integer> entry: res.entrySet()){
+            return entry;
+        }
+        return null;
+    }
+
+    public void updateStatus(User user) throws DBException {
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            con = DBCPDataSource.getConnection();
+            preparedStatement = con.prepareStatement(Query.UPDATE_USER_BLOCKED_BY_ACCOUNT_ID);
+            preparedStatement.setBoolean(1, !user.isBlocked());
+            preparedStatement.setInt(2, user.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.warn(e.getMessage());
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException ex) {
+                throw new DBException("Can not change block status", e);
+            }
+            throw new DBException("Can not change block status", e);
+        } finally {
+            try {
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException e) {
+                logger.warn(e.getMessage());
+                throw new DBException("Can not change block status", e);
+            }
+        }
     }
 }

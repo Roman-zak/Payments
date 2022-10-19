@@ -2,14 +2,19 @@ package services;
 
 import dao.UserDAO;
 import db.DBException;
+import models.Account;
 import models.User;
+import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UserService {
+    private static final Logger logger = Logger.getLogger(UserService.class);
     private static UserService instance;
     private final UserDAO userDAO = new UserDAO();
-
+    private int noOfRecords;
 
     public static synchronized UserService getInstance() {
 
@@ -32,5 +37,21 @@ public class UserService {
 
     public List<User> getAll() throws DBException {
         return userDAO.getAll();
+    }
+
+    public Map.Entry<List<User>, Integer> getAllWithLimit(int offset, int noOfRecords) throws DBException {
+        return userDAO.getAllWithLimit(offset, noOfRecords);
+
+    }
+
+    public boolean changeUserStatus(int id) {
+        try {
+            User user = userDAO.get(id);
+            userDAO.updateStatus(user);
+        } catch (DBException e) {
+            logger.warn("Can not change status", e);
+            return false;
+        }
+        return true;
     }
 }

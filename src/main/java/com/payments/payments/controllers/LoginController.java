@@ -32,9 +32,11 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password");
         DAO<User> userDAO = new UserDAO();
         if (email == null || email.isEmpty()) {
-            resp.sendError(400, "Email can't be empty");
+            req.getSession().setAttribute("message", "Email can't be empty");
+          //  resp.sendError(400, "Email can't be empty");
         } else if (password == null || password.isEmpty()) {
-            resp.sendError(400, "Password can't be empty");
+            req.getSession().setAttribute("message", "Password can't be empty");
+           // resp.sendError(400, "Password can't be empty");
         } else {
             try{
                 UserService userService = UserService.getInstance();
@@ -46,13 +48,14 @@ public class LoginController extends HttpServlet {
                     resp.sendRedirect("/");
                 } else {
                     req.getSession().setAttribute("message", "Wrong login data.");
-                    req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
+                    resp.sendRedirect("/login");
+                    //req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
                 }
             } catch (DBException e){
                 logger.warn("Incorrect password or login");
                 logger.debug("start forwarding to login page");
                 req.getSession().setAttribute("message", "Wrong login data.");
-                req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
+                resp.sendRedirect("/login");
 
              //   resp.sendError(403, "Incorrect password or login");
             }

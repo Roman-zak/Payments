@@ -45,8 +45,8 @@ public class RepayController extends HttpServlet {
                 request.getSession().setAttribute("lastPaymentMessage",
                         "Payment was performed successfully!");
             }
-            new PaymentsArchiveController().doGet(request, response);
-//            response.sendRedirect("/repay");
+            //new PaymentsArchiveController().doGet(request, response);
+            response.sendRedirect("/paymentsArchive");
 //            request.getRequestDispatcher("WEB-INF/paymentsArchive.jsp").forward(request, response);
         } catch (DBException e) {
             response.sendError(500, "Payment was not performed, try latter please.");

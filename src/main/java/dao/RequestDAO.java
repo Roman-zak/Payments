@@ -1,13 +1,11 @@
 package dao;
 
-import db.C3p0DataSource;
+import db.DBCPDataSource;
 import db.DBException;
 import db.Query;
 import models.Account;
-import models.Payment;
 import models.UnblockAccountRequest;
 import org.apache.log4j.Logger;
-import services.RequestService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class RequestDAO implements DAO<UnblockAccountRequest>{
 
     @Override
     public List<UnblockAccountRequest> getAll() throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<UnblockAccountRequest> unblockAccountRequests = new ArrayList<>();
@@ -65,7 +63,7 @@ public class RequestDAO implements DAO<UnblockAccountRequest>{
 
     @Override
     public void save(UnblockAccountRequest unblockRequest) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = con.prepareStatement(Query.ACCOUNT_UNBLOCK_REQUEST_INSERT, Statement.RETURN_GENERATED_KEYS);

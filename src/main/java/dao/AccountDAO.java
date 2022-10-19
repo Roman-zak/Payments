@@ -1,6 +1,6 @@
 package dao;
 
-import db.C3p0DataSource;
+import db.DBCPDataSource;
 import db.DBException;
 import db.Query;
 import models.Account;
@@ -15,7 +15,7 @@ public class AccountDAO implements DAO<Account>{
     private final Logger logger = Logger.getLogger(AccountDAO.class);
     @Override
     public Account get(int id) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Account account = new Account();
@@ -51,7 +51,7 @@ public class AccountDAO implements DAO<Account>{
 
     @Override
     public List<Account> getAll() throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<Account> accounts = new ArrayList<>();
@@ -87,7 +87,7 @@ public class AccountDAO implements DAO<Account>{
 
     @Override
     public void save(Account o) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         Account acc = (Account)o;
         try {
@@ -150,7 +150,7 @@ public class AccountDAO implements DAO<Account>{
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            con = C3p0DataSource.getConnection();
+            con = DBCPDataSource.getConnection();
             preparedStatement = con.prepareStatement(Query.ACCOUNT_GET_ALL_BY_USER_ID);
             preparedStatement.setInt(1,user.getId());
             if (preparedStatement.execute()) {
@@ -200,7 +200,7 @@ public class AccountDAO implements DAO<Account>{
         PreparedStatement preparedStatement = null;
 
         try {
-            con = C3p0DataSource.getConnection();
+            con = DBCPDataSource.getConnection();
             preparedStatement = con.prepareStatement(Query.UPDATE_ACCOUNT_BALANCE_BY_ACCOUNT_ID);
             preparedStatement.setDouble(1, newBalance);
             preparedStatement.setInt(2, payerAccount.getId());
@@ -226,7 +226,7 @@ public class AccountDAO implements DAO<Account>{
     }
 
     public Integer getIdByAccountNo(String accountNo) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Integer id=0;
@@ -263,7 +263,7 @@ public class AccountDAO implements DAO<Account>{
     }
 
     public Account getByAccountNo(String recipientAccountNo) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Account account = new Account();
@@ -305,7 +305,7 @@ public class AccountDAO implements DAO<Account>{
         PreparedStatement preparedStatement = null;
 
         try {
-            con = C3p0DataSource.getConnection();
+            con = DBCPDataSource.getConnection();
             preparedStatement = con.prepareStatement(Query.UPDATE_ACCOUNT_BLOCKED_BY_ACCOUNT_ID);
             preparedStatement.setBoolean(1, !account.isBlocked());
             preparedStatement.setInt(2, account.getId());

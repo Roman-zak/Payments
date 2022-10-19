@@ -1,12 +1,10 @@
 package dao;
 
-import db.C3p0DataSource;
+import db.DBCPDataSource;
 import db.DBException;
 import db.Query;
-import models.Account;
 import models.Payment;
 import models.PaymentStatus;
-import models.User;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -23,7 +21,7 @@ public class PaymentDAO implements DAO<Payment>{
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            con = C3p0DataSource.getConnection();
+            con = DBCPDataSource.getConnection();
             preparedStatement = con.prepareStatement(Query.PAYMENT_GET_BY_ID);
             preparedStatement.setInt(1,id);
             if (preparedStatement.execute()) {
@@ -68,7 +66,7 @@ public class PaymentDAO implements DAO<Payment>{
 
     @Override
     public void save(Payment payment) throws DBException {
-        Connection con = C3p0DataSource.getConnection();
+        Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = con.prepareStatement(Query.PAYMENT_CREATE, Statement.RETURN_GENERATED_KEYS);
@@ -125,7 +123,7 @@ public class PaymentDAO implements DAO<Payment>{
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            con = C3p0DataSource.getConnection();
+            con = DBCPDataSource.getConnection();
             preparedStatement = con.prepareStatement(Query.PAYMENT_GET_BY_USER_ID);
             preparedStatement.setInt(1,id);
             if (preparedStatement.execute()) {
@@ -170,7 +168,7 @@ public class PaymentDAO implements DAO<Payment>{
         Connection con = null;
         PreparedStatement preparedStatement = null;
         try {
-            con = C3p0DataSource.getConnection();
+            con = DBCPDataSource.getConnection();
             preparedStatement = con.prepareStatement(Query.UPDATE_PAYMENT_STATUS_BY_PAYMENT_ID);
             if(payment.getStatus()==PaymentStatus.SENT){
                 preparedStatement.setInt(1, 0);
