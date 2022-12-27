@@ -1,3 +1,4 @@
+<%--<jsp:useBean id="errors" scope="request" type="java.lang.String"/>--%>
 <%--
   Created by IntelliJ IDEA.
   User: Roman
@@ -17,24 +18,29 @@
 <jsp:include page="fragments/nav-header.jsp"/>
 <h1>User Register</h1>
 <form action="/register" method="post">
-  <table style="with: 20%">
-    <tr>
-      <td>First Name</td>
-      <td><input required="required" type="text" name="name" /></td>
-    </tr>
-    <tr>
-      <td>Last Name</td>
-      <td><input required="required" type="text" name="surname" /></td>
-    </tr>
-    <tr>
-      <td>Email</td>
-      <td><input required="required" type="email" name="email" /></td>
-    </tr>
-    <tr>
-      <td>Password</td>
-      <td><input required="required" type="password" name="password" /></td>
-    </tr>
-  </table>
-  <input type="submit" value="Submit" /></form>
+  <div class="form-group">
+    <label for="InputName">Name</label>
+    <input required pattern="\p{1,25}" name="name"  type="text" class="form-control" id="InputName" placeholder="Enter name">
+  </div>
+  <div class="form-group">
+    <label for="InputSurname">Surname</label>
+    <input required pattern="\p{1,25}" name="surname"  type="text" class="form-control" id="InputSurname" placeholder="Enter surname">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input required name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+  <div class="form-group">
+    <label for="InputPassword">Password</label>
+    <input required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"  oninvalid="this.setCustomValidity('Password must contain minimum eight characters, at least one uppercase letter, one lowercase letter and one number')"
+           oninput="this.setCustomValidity('')" name ="password" type="password" class="form-control" aria-describedby="passwordHelp" id="InputPassword" placeholder="Password">
+<%--    <small id="passwordHelp" class="form-text text-muted">Password must contain minimum eight characters, at least one uppercase letter, one lowercase letter and one number.</small>--%>
+  </div>
+
+  <br>
+  <button type="submit" class="btn btn-primary">Sign up</button>
+</form>
+${errors }
 </body>
 </html>

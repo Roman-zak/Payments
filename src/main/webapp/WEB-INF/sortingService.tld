@@ -10,28 +10,28 @@
     <uri>sortingService</uri>
     <function>
         <name>sortByNumber</name>
-        <function-class>services.AccountService</function-class>
+        <function-class>com.payments.services.AccountService</function-class>
         <function-signature>java.util.List sortByNumber(java.util.List)</function-signature>
     </function>
     <function>
         <name>sortByName</name>
-        <function-class>services.AccountService</function-class>
+        <function-class>com.payments.services.AccountService</function-class>
         <function-signature>java.util.List sortByName(java.util.List)</function-signature>
     </function>
     <function>
         <name>sortByBalance</name>
-        <function-class>services.AccountService</function-class>
+        <function-class>com.payments.services.AccountService</function-class>
         <function-signature>java.util.List sortByBalance(java.util.List)</function-signature>
     </function>
 
     <function>
         <name>sortPaymentsByNumber</name>
-        <function-class>services.PaymentService</function-class>
+        <function-class>com.payments.services.PaymentService</function-class>
         <function-signature>java.util.List sortByNumber(java.util.List)</function-signature>
     </function>
     <function>
         <name>sortPaymentsByDate</name>
-        <function-class>services.PaymentService</function-class>
+        <function-class>com.payments.services.PaymentService</function-class>
         <function-signature>java.util.List sortByDate(java.util.List)</function-signature>
     </function>
 

@@ -5,7 +5,7 @@
 
     <tag>
         <name>Account</name>
-        <tag-class>com.payments.payments.controllers.tags.AccountTagController</tag-class>
+        <tag-class>com.payments.controllers.tags.AccountTagController</tag-class>
         <body-content>empty</body-content>
 
         <attribute>

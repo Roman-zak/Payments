@@ -9,7 +9,7 @@
 
 <!--    <filter>-->
 <!--        <filter-name>FilterUserRole</filter-name>-->
-<!--        <filter-class>filters.FilterUserRole</filter-class>-->
+<!--        <filter-class>com.payments.filters.FilterUserRole</filter-class>-->
 <!--    </filter>-->
 <!--    <filter-mapping>-->
 <!--        <filter-name>FilterUserRole</filter-name>-->

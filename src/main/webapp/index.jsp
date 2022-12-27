@@ -16,52 +16,54 @@
             In order to make payment log in please.
         </c:if>
         <c:if test="${sessionScope.user!=null}">
-            <c:out value="${sessionScope.user.role}"/>
             <div class="container">
                 <div class="row">
-                    <form action="/pay" method="post">
-                        <div class="row">
-                            <div class="col">
-                                Payer`s account
-                            </div>
-                            <div class="col">
-<%--                                ${sessionScope.user.accounts}--%>
-                                <select name = "payer_id">
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                        <h3>Make a payment</h3>
+                        <form action="/pay" method="post">
+                            <div class="form-group">
+                                <label for="payerAcc">Payer`s account</label>
+                                <select id = "payerAcc" class="form-control" name = "payer_id">
                                     <c:forEach var="account" items="${sessionScope.user.accounts}">
-                                        <option value="${account.id}"><c:out value="${account.accountNo}"/></option>
+                                        <option value="${account.id}">${account.accountNo}</option>
                                     </c:forEach>
                                 </select>
                             </div>
-                            <div class="col">
-                                Rerecipient`s account
+                            <br>
+                            <div class="form-group">
+                                <label for="recepientAcc"> Rerecipient`s account</label>
+                                <input type="text" class="form-control" id="recepientAcc"
+                                <c:if test="${sessionScope.replenishAccountNo != null}">
+                                       value="${sessionScope.replenishAccountNo}"
+                                </c:if>
+                                       name="recipientAccountNo" required pattern="^[0-9]{8,17}$">
                             </div>
-                            <div class="col">
-                                <input type="text"
-                                    <c:if test="${sessionScope.replenishAccountNo != null}">
-                                        value="${sessionScope.replenishAccountNo}"
-                                    </c:if>
-                                name="recipientAccountNo" required>
+                            <br>
+                            <div class="form-group">
+                                <label for="sum">Sum</label>
+                                <input id="sum" class="form-control" type="number" min="0" step="0.01" name="sum" required>
                             </div>
-                            <div class="col">
-                                Sum
-                            </div>
-                            <div class="col">
-                                <input type="number" min="0" step="0.01" name="sum" required>
-                            </div>
-                            <div class="col">
-                                <input type="submit" value="Pay">
-                            </div>
-                        </div>
-                    </form>
+                            <br>
+                            <input type="submit" class="btn btn-primary"value="Pay">
+                        </form>
+                    </div>
+                    <div class="col">
+
+                    </div>
                 </div>
                 <div class="row">
                     <c:if test="${not empty lastPaymentMessage}">
                         <p>${lastPaymentMessage}</p>
                     </c:if>
                 </div>
+                <div class="row">
+                        ${errors }
+                </div>
+
             </div>
         </c:if>
-
     </div>
 </body>
 </html>

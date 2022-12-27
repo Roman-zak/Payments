@@ -19,18 +19,18 @@
 <jsp:include page="fragments/nav-header.jsp"/>
 <h1>User Login</h1>
 <form action="/login" method="post">
-    <table style="with: 50%">
-
-        <tr>
-            <td>Email</td>
-            <td><input required="required" type="email" name="email" /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input required="required" type="password" name="password" /></td>
-        </tr>
-    </table>
-    <input type="submit" value="Login" /></form>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input name ="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Log in</button>
+</form>
 <c:if test="${not empty message}">
     <p>${message}</p>
 </c:if>

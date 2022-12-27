@@ -25,7 +25,7 @@
     </td>
     <tr>
       <td>Account number</td>
-      <td><input required="required" type="text" name="accountNo" /></td>
+      <td><input required="required" pattern="[0-9]{8,17}" type="text" name="accountNo" /></td>
     </tr>
     <tr>
       <td>Currency</td>
@@ -39,19 +39,21 @@
     </tr>
     <tr>
       <td>Owner</td>
-      <td><input required="required" type="text" name="ownerName" /></td>
+      <td><input required="required" pattern="\p{8,17}" type="text" name="ownerName" /></td>
     </tr>
     <tr>
       <td>Owner phone</td>
-      <td><input required="required" type="text" name="ownerPhone" /></td>
+      <td><input required="required" pattern="^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
+                 oninvalid="this.setCustomValidity('Phone number must include country code')"
+                 oninput="this.setCustomValidity('')"type="text" name="ownerPhone" /></td>
     </tr>
     <tr>
       <td>Owner address</td>
-      <td><input required="required" type="text" name="ownerAddress" /></td>
+      <td><input pattern="\p{8,17}" required="required" type="text" name="ownerAddress" /></td>
     </tr>
     <tr>
       <td>Postal code</td>
-      <td><input required="required" type="text" name="postalCode" /></td>
+      <td><input pattern="[0-9]{5}" required="required" type="text" name="postalCode" /></td>
     </tr>
     <tr>
       <td align="center">
@@ -61,23 +63,31 @@
 
     <tr>
       <td>Credit card number</td>
-      <td><input type="text" id="ccnum" name="cardnumber" placeholder="1111222233334444"></td>
+      <td><input required pattern="(^4[0-9]{12}(?:[0-9]{3})?$)
+        |(^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$)
+        |(3[47][0-9]{13})|(^3(?:0[0-5]|[68][0-9])[0-9]{11}$)
+        |(^6(?:011|5[0-9]{2})[0-9]{12}$)
+        |(^(?:2131|1800|35\\d{3})\\d{11}$)" type="text" id="ccnum" name="cardnumber" placeholder="1111222233334444"></td>
     </tr>
     <tr>
       <td>Exp Month</td>
-      <td><input type="text"  name="expMonth" placeholder="1-12"></td>
+      <td><input required pattern="^(0?[1-9]|1[012])$" type="text"  name="expMonth" placeholder="1-12"></td>
     </tr>
     <tr>
       <td>Exp Year</td>
-      <td><input type="text"  name="expYear" placeholder="2022"></td>
+      <td><input required pattern="^[0-9]{4}$" type="text"  name="expYear" placeholder="2022"></td>
     </tr>
     <tr>
       <td>CVC</td>
-      <td><input type="text"  name="cvc" placeholder="355"></td>
+      <td><input pattern="^[0-9]{3}$" type="text"  name="cvc" placeholder="355"></td>
     </tr>
 
   </table>
   <input type="submit" value="Submit" /></form>
 </form>
+<c:if test="${not empty addAccountMessage}">
+  <p>${message}</p>
+</c:if>
+${errors }
 </body>
 </html>
