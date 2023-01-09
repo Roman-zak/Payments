@@ -71,6 +71,7 @@
                   <th scope="col">Expire date</th>
                   <th scope="col">Replenish</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Delete</th>
               </tr>
               </thead>
               <tbody>
@@ -97,6 +98,13 @@
                                              <c:if test="${account.blocked==false}">value="block"</c:if>
                                              <c:if test="${account.blocked==true}">value="unblock"</c:if>
                                       >
+                                  </form>
+                              </td>
+                              <td>
+                                  <form action="/account" method="post">
+                                      <input type="hidden" name="accountId" value="${account.id}">
+                                      <input type="hidden" name="method" value="delete">
+                                      <input type="submit" class="btn btn-primary" value="delete">
                                   </form>
                               </td>
                           </tr>
@@ -161,7 +169,7 @@
           </table>
       </div>
       <div class="row">
-        <form action="/addAccount" method="get" c>
+        <form action="/account" method="get" >
           <input type="submit" class="btn btn-primary" value="Add">
         </form>
       </div>

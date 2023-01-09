@@ -12,14 +12,50 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class RequestDAO implements DAO<UnblockAccountRequest>{
     private static final Logger logger = Logger.getLogger(RequestDAO.class);
     private static final AccountDAO accountDAO = new AccountDAO();
     private int noOfRecords;
     @Override
     public UnblockAccountRequest get(int id) throws DBException {
-        return null;
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        UnblockAccountRequest unblockAccountRequest = null;
+        try {
+            int reqId;
+            preparedStatement = con.prepareStatement(Query.REQUEST_ACCOUNT_GET_BY_ID);
+            preparedStatement.setInt(1, id);
+            if (preparedStatement.execute()) {
+                resultSet = preparedStatement.getResultSet();
+                int accountId=0;
+                if (resultSet.next()) {
+                    int k=1;
+                    reqId = resultSet.getInt(k++);
+                    accountId = resultSet.getInt(k);
+                    Account account = accountDAO.get(accountId);
+                    unblockAccountRequest = new UnblockAccountRequest(reqId, account);
+                }
+            }
+            con.commit();
+            return unblockAccountRequest;
+        } catch (SQLException e) {
+            logger.warn(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new DBException("Can not rollback get all requests", e);
+            }
+            throw new DBException("Can not get request", e);
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new DBException("Can not close resources get all accounts", e);
+            }
+        }
     }
 
     @Override
@@ -72,12 +108,9 @@ public class RequestDAO implements DAO<UnblockAccountRequest>{
             preparedStatement = con.prepareStatement(Query.ACCOUNT_UNBLOCK_REQUEST_INSERT, Statement.RETURN_GENERATED_KEYS);
             int k = 1;
             preparedStatement.setInt(k, unblockRequest.getAccount().getId());
-
-            int count = preparedStatement.executeUpdate();
-            logger.debug("effected rows: "+count);
+            preparedStatement.executeUpdate();
             setGeneratedUnblockAccountRequestId(unblockRequest, preparedStatement );
             con.commit();
-            preparedStatement.close();
         } catch (SQLException e) {
             logger.warn(e.getMessage());
             try {
@@ -86,6 +119,14 @@ public class RequestDAO implements DAO<UnblockAccountRequest>{
                 throw  new DBException("Failed to rollback", ex);
             }
             throw  new DBException("Failed to save unblockRequest", e);
+        }finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
         }
     }
     private void setGeneratedUnblockAccountRequestId(UnblockAccountRequest unblockRequest, PreparedStatement stmt) throws DBException {
@@ -104,13 +145,63 @@ public class RequestDAO implements DAO<UnblockAccountRequest>{
     }
 
     @Override
-    public void update(UnblockAccountRequest unblockAccountRequest, String[] params) {
-
+    public void update(UnblockAccountRequest unblockAccountRequest) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.ACCOUNT_UNBLOCK_REQUEST_UPDATE, Statement.RETURN_GENERATED_KEYS);
+            int k = 1;
+            preparedStatement.setInt(k++, unblockAccountRequest.getAccount().getId());
+            preparedStatement.setInt(k, unblockAccountRequest.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.warn(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw  new DBException("Failed to rollback", ex);
+            }
+            throw  new DBException("Failed to update unblockRequest", e);
+        }finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     @Override
-    public void delete(UnblockAccountRequest unblockAccountRequest) {
-
+    public void delete(UnblockAccountRequest unblockAccountRequest) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.ACCOUNT_DELETE);
+            int k = 1;
+            preparedStatement.setInt(k, unblockAccountRequest.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not delete unblockAccountRequest");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     public Map.Entry<List<UnblockAccountRequest>, Integer> getAllWithLimit(int offset, int noOfRecords) throws DBException {

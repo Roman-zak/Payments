@@ -8,25 +8,103 @@ import com.payments.models.Card;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.payments.data.Query.CARD_GET_BY_ACCOUNT_ID;
-
-public class CardDAO implements DAO{
+public class CardDAO implements DAO<Card>{
     private final Logger logger = Logger.getLogger(CardDAO.class);
 
     @Override
-    public Object get(int id) throws DBException {
-        return null;
+    public Card get(int id) throws DBException {
+        Card card = new Card();
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = DBCPDataSource.getConnection();
+            preparedStatement = con.prepareStatement(Query.CARD_GET_BY_ID);
+            preparedStatement.setInt(1,id);
+            if (preparedStatement.execute()) {
+                resultSet = preparedStatement.getResultSet();
+                int k;
+                if (resultSet.next()) {
+                    k=1;
+                    card.setId(resultSet.getInt(k++));
+                    card.setAccountId(resultSet.getInt(k++));
+                    card.setCardNo(resultSet.getString(k++));
+                    card.setCvc(resultSet.getString(k++));
+                    card.setExpMonth(resultSet.getInt(k++));
+                    card.setExpYear(resultSet.getInt(k));
+                }
+            }
+            con.commit();
+            return card;
+        } catch (SQLException e) {
+            logger.warn(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new DBException("Can't get card from database", e);
+            }
+            throw new DBException("Can't get card from database", e);
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException e){
+                throw new DBException("Can't get card from database", e);
+            }
+        }
     }
-
     @Override
-    public List getAll() {
-        return null;
+    public List<Card> getAll() throws DBException {
+        List<Card> cards = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = DBCPDataSource.getConnection();
+            preparedStatement = con.prepareStatement(Query.CARD_GET_ALL);
+            if (preparedStatement.execute()){
+                resultSet = preparedStatement.getResultSet();
+                int k;
+                Card card = null;
+                while (resultSet.next()) {
+                    card = new Card();
+                    k=1;
+                    card.setId(resultSet.getInt(k++));
+                    card.setAccountId(resultSet.getInt(k++));
+                    card.setCardNo(resultSet.getString(k++));
+                    card.setCvc(resultSet.getString(k++));
+                    card.setExpMonth(resultSet.getInt(k++));
+                    card.setExpYear(resultSet.getInt(k));
+                    cards.add(card);
+                }
+            }
+            con.commit();
+            return cards;
+        } catch (SQLException e) {
+            logger.warn(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new DBException("Can't get cards from database", e);
+            }
+            throw new DBException("Can't get cards from database", e);
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException e){
+                throw new DBException("Can't get cards from database", e);
+            }
+        }
     }
-
     @Override
-    public void save(Object o) throws DBException {
+    public void save(Card o) throws DBException {
         Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         Card card = (Card) o;
@@ -77,15 +155,68 @@ public class CardDAO implements DAO{
 
     }
     @Override
-    public void update(Object o, String[] params) {
-
+    public void update(Card card) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.CARD_UPDATE);
+            int k = 1;
+            preparedStatement.setInt(k++, card.getAccountId());
+            preparedStatement.setString(k++, card.getCardNo());
+            preparedStatement.setString(k++, card.getCvc());
+            preparedStatement.setInt(k++, card.getExpMonth());
+            preparedStatement.setInt(k++, card.getExpYear());
+            preparedStatement.setInt(k, card.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not update card");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
-
     @Override
-    public void delete(Object o) {
-
+    public void delete(Card card) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.CARD_DELETE);
+            int k = 1;
+            preparedStatement.setInt(k, card.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not delete card");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
-
     public void attachCardToAccounts(List<Account> accounts) throws DBException {
         for (Account account: accounts) {
             account.setCard(getByAccountId(account.getId()));
@@ -150,6 +281,26 @@ public class CardDAO implements DAO{
                 preparedStatement.close();
             } catch (SQLException e){
                 throw new DBException("Failed to close prepare statement", e);
+            }
+        }
+    }
+
+    public void delete(int accountId, Connection con) throws SQLException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.CARD_DELETE_BY_ACCOUNT_ID);
+            int k = 1;
+            preparedStatement.setInt(k, accountId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            throw new SQLException("can not delete credit card", e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new SQLException("Can not close resources",e);
             }
         }
     }

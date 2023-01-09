@@ -12,7 +12,7 @@ public interface DAO<T> {
 
     void save(T t) throws DBException;
 
-    void update(T t, String[] params);
+    void update(T t) throws DBException;
 
-    void delete(T t);
+    void delete(T t) throws DBException;
 }

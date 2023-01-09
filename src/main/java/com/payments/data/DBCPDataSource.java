@@ -10,7 +10,6 @@ public class DBCPDataSource {
     private static final Logger logger = Logger.getLogger(DBCPDataSource.class);
     private static BasicDataSource ds = new BasicDataSource();
     static {
-            //ds.setDriverClass("com.mysql.cj.jdbc.Driver");
             ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
             ds.setUrl(Constants.PAYMENTS_CONNECTION_URL);
             ds.setUsername(Constants.PAYMENTS_DB_USER);
@@ -25,7 +24,7 @@ public class DBCPDataSource {
         try {
             con = ds.getConnection();
         } catch (SQLException e) {
-            logger.warn("Failed to get connection",e);
+            logger.error("Failed to get connection",e);
             throw new DBException("Failed to get connection");
         }
         return con;

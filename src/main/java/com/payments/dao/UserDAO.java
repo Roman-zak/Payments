@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.payments.data.Query.*;
-
+//2
 public class UserDAO implements DAO<User>{
     private final Logger logger = Logger.getLogger(CardDAO.class);
 
@@ -164,13 +164,69 @@ public class UserDAO implements DAO<User>{
 
     }
     @Override
-    public void update(User user, String[] params) {
-
+    public void update(User user) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.USER_UPDATE);
+            int k = 1;
+            preparedStatement.setString(k++, user.getEmail());
+            preparedStatement.setString(k++, user.getPassword());
+            preparedStatement.setString(k++, user.getName());
+            preparedStatement.setString(k++, user.getSurname());
+            preparedStatement.setInt(k++, user.getRole().getId());
+            preparedStatement.setBoolean(k, user.isBlocked());
+            preparedStatement.setInt(k++, user.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not update user");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     @Override
-    public void delete(User user) {
-
+    public void delete(User user) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.USER_DELETE);
+            int k = 1;
+            preparedStatement.setInt(k, user.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not delete user");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     public Map.Entry<List<User>, Integer> getAllWithLimit(int offset, int noOfRecords) throws DBException {

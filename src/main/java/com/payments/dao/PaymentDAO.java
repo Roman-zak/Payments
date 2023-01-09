@@ -45,7 +45,7 @@ public class PaymentDAO implements DAO<Payment>{
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                throw new DBException("Can't get payment from database", e);
+                throw new DBException("Can't rollback", e);
             }
             throw new DBException("Can't get payment from database", e);
         } finally {
@@ -54,14 +54,56 @@ public class PaymentDAO implements DAO<Payment>{
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e){
-                throw new DBException("Can't get payment from database", e);
+                throw new DBException("Can't close resources", e);
             }
         }
     }
 
     @Override
-    public List<Payment> getAll() {
-        return null;
+    public List<Payment> getAll() throws DBException {
+        List<Payment> payments = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = DBCPDataSource.getConnection();
+            preparedStatement = con.prepareStatement(Query.PAYMENT_GET_ALL);
+            if (preparedStatement.execute()) {
+                resultSet = preparedStatement.getResultSet();
+                int k;
+                Payment payment;
+                while (resultSet.next()) {
+                    payment = new Payment();
+                    k=1;
+                    payment.setId(resultSet.getInt(k++));
+                    payment.setPayerAccountId(resultSet.getInt(k++));
+                    payment.setPayerAccountNumber(resultSet.getString(k++));
+                    payment.setSum(resultSet.getDouble(k++));
+                    payment.setRecipientAccountNo(resultSet.getString(k++));
+                    payment.setTimeStamp(resultSet.getTimestamp(k++).toLocalDateTime());
+                    payment.setStatus(PaymentStatus.values()[resultSet.getInt(k)]);
+                    payments.add(payment);
+                }
+            }
+            con.commit();
+            return payments;
+        } catch (SQLException e) {
+            logger.warn(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new DBException("Can't rollback", e);
+            }
+            throw new DBException("Can't get payments from database", e);
+        } finally {
+            try {
+                resultSet.close();
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException e){
+                throw new DBException("Can't close resources", e);
+            }
+        }
     }
 
     @Override
@@ -74,7 +116,7 @@ public class PaymentDAO implements DAO<Payment>{
             preparedStatement.setDouble(k++, payment.getSum());
             preparedStatement.setInt(k++, payment.getPayerAccountId());
             preparedStatement.setString(k++, payment.getRecipientAccountNo());
-            preparedStatement.setString(k++, null);
+            preparedStatement.setString(k++, payment.getRecipientName());
             preparedStatement.setInt(k, payment.getStatus().ordinal());
             int count = preparedStatement.executeUpdate();
             logger.debug("effected rows: "+count);
@@ -108,13 +150,68 @@ public class PaymentDAO implements DAO<Payment>{
     }
 
     @Override
-    public void update(Payment payment, String[] params) {
-
+    public void update(Payment payment) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.PAYMENT_UPDATE);
+            int k = 1;
+            preparedStatement.setDouble(k++, payment.getSum());
+            preparedStatement.setInt(k++, payment.getPayerAccountId());
+            preparedStatement.setString(k++, payment.getRecipientAccountNo());
+            preparedStatement.setString(k++, payment.getRecipientName());
+            preparedStatement.setInt(k++, payment.getStatus().ordinal());
+            preparedStatement.setInt(k, payment.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not update payment");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     @Override
-    public void delete(Payment payment) {
-
+    public void delete(Payment payment) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.PAYMENT_DELETE);
+            int k = 1;
+            preparedStatement.setInt(k, payment.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not delete payment");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     public List<Payment> getPaymentsByUserId(int id) throws DBException {

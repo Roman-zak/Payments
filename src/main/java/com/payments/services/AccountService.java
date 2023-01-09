@@ -133,4 +133,36 @@ public class AccountService {
         }
         return true;
     }
+
+    public void deleteById(int accountId, int userId) throws DBException {
+        int usersCount = userAccountDAO.getCountOfUsersWithAccount(accountId);
+        System.out.println("usersCount"+usersCount);
+        if(usersCount>1){
+            userAccountDAO.delete(accountId, userId);
+        } else if (usersCount==1) {
+            Connection con = DBCPDataSource.getConnection();
+            try{
+                userAccountDAO.delete(accountId, userId, con);
+                cardDAO.delete(accountId, con);
+                accountDAO.delete(accountId, con);
+                con.commit();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    logger.error(ex);
+                    throw new DBException("failed to rollback", ex);
+                }
+                throw new DBException( "failed to delete account",e);
+            }finally {
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        logger.error(ex);
+                        throw new DBException( "failed to close resources",ex);
+                    }
+            }
+        }
+    }
 }

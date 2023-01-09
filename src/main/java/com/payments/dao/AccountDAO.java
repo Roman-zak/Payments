@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class AccountDAO implements DAO<Account>{
     private final Logger logger = Logger.getLogger(AccountDAO.class);
     private int noOfRecords;
@@ -38,7 +37,7 @@ public class AccountDAO implements DAO<Account>{
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                throw new DBException("Can not get account by acc number", e);
+                throw new DBException("Can not rollback get account by acc number", e);
             }
             throw new DBException("Can not get account by acc number", e);
         } finally {
@@ -47,7 +46,7 @@ public class AccountDAO implements DAO<Account>{
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
-                throw new DBException("Can not get account by acc number", e);
+                throw new DBException("Can not close resources get account by acc number", e);
             }
         }
     }
@@ -70,11 +69,11 @@ public class AccountDAO implements DAO<Account>{
             con.commit();
             return accounts;
         } catch (SQLException e) {
-            logger.warn(e.getMessage());
+            logger.error(e.getMessage());
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                throw new DBException("Can not get all accounts", e);
+                throw new DBException("Can not rollback get all accounts", e);
             }
             throw new DBException("Can not get all accounts", e);
         } finally {
@@ -83,7 +82,8 @@ public class AccountDAO implements DAO<Account>{
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
-                throw new DBException("Can not get all accounts", e);
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources get all accounts", e);
             }
         }
     }
@@ -101,23 +101,26 @@ public class AccountDAO implements DAO<Account>{
             preparedStatement.setDouble(k++, acc.getBalance());
             preparedStatement.setString(k++, acc.getOwnerName());
             preparedStatement.setString(k++, acc.getOwnerPhone());
-            System.out.println("in account dao "+acc.getOwnerAddress());
             preparedStatement.setString(k++, acc.getOwnerAddress());
             preparedStatement.setString(k, acc.getPostalCode());
-
-            int count = preparedStatement.executeUpdate();
-            System.out.println(count);
             setGeneratedAccountId( acc, preparedStatement );
             con.commit();
         } catch (SQLException e) {
-             logger.warn(e.getMessage());
             try {
-                preparedStatement.close();
                 con.rollback();
             } catch (SQLException ex) {
-                throw new DBException("Can not rollback");
+                throw new DBException("Can not rollback save account");
             }
+            logger.warn(e.getMessage());
             throw new DBException("Can not save account");
+        } finally {
+            try {
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException ex) {
+                logger.warn(ex.getMessage());
+                throw new DBException("Can not close prep stmt");
+            }
         }
     }
     private void setGeneratedAccountId(Account acc, PreparedStatement stmt) throws DBException {
@@ -136,11 +139,71 @@ public class AccountDAO implements DAO<Account>{
 
     }
     @Override
-    public void update(Account o, String[] params) {
+    public void update(Account o) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        Account acc = (Account)o;
+        try {
+            preparedStatement = con.prepareStatement(Query.ACCOUNT_UPDATE);
+            int k = 1;
+            preparedStatement.setString(k++, acc.getAccountNo());
+            preparedStatement.setString(k++, acc.getCurrency());
+            preparedStatement.setDouble(k++, acc.getBalance());
+            preparedStatement.setString(k++, acc.getOwnerName());
+            preparedStatement.setString(k++, acc.getOwnerPhone());
+            preparedStatement.setString(k++, acc.getOwnerAddress());
+            preparedStatement.setString(k++, acc.getPostalCode());
+            preparedStatement.setBoolean(k, acc.isBlocked());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not update account");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
     }
 
     @Override
-    public void delete(Account o) {
+    public void delete(Account acc) throws DBException {
+        Connection con = DBCPDataSource.getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.ACCOUNT_DELETE);
+            int k = 1;
+            preparedStatement.setInt(k, acc.getId());
+            preparedStatement.executeUpdate();
+            con.commit();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+                throw new DBException("Can not rollback");
+            }
+            throw new DBException("Can not delete account");
+        } finally {
+            try {
+                con.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new DBException("Can not close resources");
+            }
+        }
 
     }
 
@@ -162,7 +225,7 @@ public class AccountDAO implements DAO<Account>{
             con.commit();
             return accounts;
         } catch (SQLException e) {
-            logger.warn(e.getMessage());
+            logger.error(e.getMessage());
             try {
                 con.rollback();
             } catch (SQLException ex) {
@@ -175,6 +238,7 @@ public class AccountDAO implements DAO<Account>{
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e){
+                logger.error(e.getMessage());
                 throw new DBException("Can't get Users from database", e);
             }
 
@@ -212,6 +276,7 @@ public class AccountDAO implements DAO<Account>{
             try {
                 con.rollback();
             } catch (SQLException ex) {
+                logger.error(ex.getMessage());
                 throw new DBException("Can not perform money withdraw", e);
             }
             throw new DBException("Can not perform money withdraw", e);
@@ -220,6 +285,7 @@ public class AccountDAO implements DAO<Account>{
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
+                logger.error(e.getMessage());
                 throw new DBException("Can not perform money withdraw", e);
             }
         }
@@ -385,8 +451,7 @@ public class AccountDAO implements DAO<Account>{
             System.out.println("in account dao "+acc.getOwnerAddress());
             preparedStatement.setString(k++, acc.getOwnerAddress());
             preparedStatement.setString(k, acc.getPostalCode());
-            int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+            preparedStatement.executeUpdate();
             setGeneratedAccountId( acc, preparedStatement );
 
         } catch (SQLException e) {
@@ -397,6 +462,26 @@ public class AccountDAO implements DAO<Account>{
                 preparedStatement.close();
             } catch (SQLException ex) {
                 throw new DBException("Can not close prepare statement.");
+            }
+        }
+    }
+
+    public void delete(int accountId, Connection con) throws SQLException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = con.prepareStatement(Query.ACCOUNT_DELETE);
+            int k = 1;
+            preparedStatement.setInt(k, accountId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            throw new SQLException("can not delete account", e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new SQLException("Can not close resources",e);
             }
         }
     }

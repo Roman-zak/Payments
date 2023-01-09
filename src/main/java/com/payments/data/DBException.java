@@ -12,5 +12,6 @@ public class DBException extends SQLException {
 
     public DBException(String s) {
         super(s);
+
     }
 }

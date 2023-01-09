@@ -18,7 +18,7 @@
 <body>
 <jsp:include page="fragments/nav-header.jsp"/>
 <h2>Add account</h2>
-<form action="/addAccount" method="post">
+<form action="/account" method="post">
   <table style="with: 20%">
     <td align="center">
       Bank account
