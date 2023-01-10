@@ -26,7 +26,6 @@ public class PaymentService {
     public List<Payment> getAllUserPayments(User user) throws DBException {
         return paymentDAO.getPaymentsByUserId(user.getId());
     }
-    //роблю методи для сортування, далі зроблю фільтри
     public static List<Payment> sortByNumber(List<Payment> payment){
         return payment.stream().sorted(Comparator.comparing(Payment::getPayerAccountNumber)).collect(Collectors.toList());
     }

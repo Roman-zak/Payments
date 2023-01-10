@@ -13,12 +13,14 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Set;
 
 @WebServlet(name = "account", value = "/account")
 public class AccountController extends HttpServlet {
+    Logger logger = Logger.getLogger(AccountController.class);
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("WEB-INF/addAccount.jsp").forward(request, response);
@@ -53,7 +55,7 @@ public class AccountController extends HttpServlet {
         try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
             validator = validatorFactory.getValidator();
         }catch (Exception e){
-            System.out.println(e);
+            logger.error(e);
         }
         Set<ConstraintViolation<Account>> accountConstraintViolations = validator.validate(account);
         Set<ConstraintViolation<Card>> cardConstraintViolations = validator.validate(card);

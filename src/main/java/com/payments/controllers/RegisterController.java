@@ -5,6 +5,7 @@ import com.payments.dao.UserDAO;
 import com.payments.data.DBException;
 import com.payments.models.Role;
 import com.payments.models.User;
+import com.payments.services.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,12 +15,15 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Set;
 
 @WebServlet(name = "register", value = "/register")
 public class RegisterController extends HttpServlet {
+    UserService userService = UserService.getInstance();
+    private final Logger logger = Logger.getLogger(RegisterController.class);
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
@@ -39,7 +43,7 @@ public class RegisterController extends HttpServlet {
         try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
             validator = validatorFactory.getValidator();
         }catch (Exception e){
-            System.out.println(e);
+            logger.error(e);
         }
         Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
         if (!constraintViolations.isEmpty()) {
@@ -53,7 +57,7 @@ public class RegisterController extends HttpServlet {
             request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
         } else {
             try {
-                userDAO.save(user);
+                userService.save(user);
             } catch (DBException e) {
                 response.sendError(403, "Was unable to register this user.");
             }

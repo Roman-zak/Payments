@@ -3,8 +3,6 @@ package com.payments.controllers.tags;
 import com.payments.models.Account;
 import com.payments.models.Card;
 
-//import javax.servlet.jsp.tagext.*;
-//import javax.servlet.jsp.*;
 import jakarta.servlet.jsp.tagext.*;
 import jakarta.servlet.jsp.*;
 import java.io.IOException;

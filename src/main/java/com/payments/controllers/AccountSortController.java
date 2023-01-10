@@ -21,11 +21,8 @@ public class AccountSortController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //System.out.println("--------------------------------MODE PASSED "+request.getParameter("accountsSortMode"));
         logger.debug("account sort mode"+request.getParameter("accountsSortMode"));
-
         request.getSession().setAttribute("accountsSortMode", request.getParameter("accountsSortMode"));
         request.getRequestDispatcher("WEB-INF/profile.jsp").forward(request, response);
-        //request.getRequestDispatcher("WEB-INF/profile.jsp").forward(request, response);
     }
 }

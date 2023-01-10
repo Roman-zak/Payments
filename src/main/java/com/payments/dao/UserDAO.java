@@ -14,9 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.payments.data.Query.*;
-//2
 public class UserDAO implements DAO<User>{
-    private final Logger logger = Logger.getLogger(CardDAO.class);
+    private final Logger logger = Logger.getLogger(UserDAO.class);
 
     private List<User> users = new ArrayList<>();
     private int noOfRecords;
@@ -128,7 +127,7 @@ public class UserDAO implements DAO<User>{
             preparedStatement.setBoolean(k, false);
 
             int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+             
             setGeneratedUserId( user, preparedStatement );
             con.commit();
         } catch (SQLException e) {
@@ -204,10 +203,17 @@ public class UserDAO implements DAO<User>{
         Connection con = DBCPDataSource.getConnection();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = con.prepareStatement(Query.USER_DELETE);
-            int k = 1;
-            preparedStatement.setInt(k, user.getId());
-            preparedStatement.executeUpdate();
+
+            if(user.getId()==0){
+                preparedStatement = con.prepareStatement(Query.USER_DELETE_BY_EMAIL);
+                preparedStatement.setString(1, user.getEmail());
+            } else{
+                preparedStatement = con.prepareStatement(Query.USER_DELETE);
+                preparedStatement.setInt(1, user.getId());
+            }
+
+            int count = preparedStatement.executeUpdate();
+            logger.info("delete returned "+count);
             con.commit();
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -228,7 +234,6 @@ public class UserDAO implements DAO<User>{
             }
         }
     }
-
     public Map.Entry<List<User>, Integer> getAllWithLimit(int offset, int noOfRecords) throws DBException {
         String query = "select SQL_CALC_FOUND_ROWS * from user limit " + offset + ", " + noOfRecords;
         Connection connection = DBCPDataSource.getConnection();

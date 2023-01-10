@@ -29,10 +29,8 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password");
         if (email == null || email.isEmpty()) {
             req.getSession().setAttribute("message", "Email can't be empty");
-          //  resp.sendError(400, "Email can't be empty");
         } else if (password == null || password.isEmpty()) {
             req.getSession().setAttribute("message", "Password can't be empty");
-           // resp.sendError(400, "Password can't be empty");
         } else {
             try{
                 UserService userService = UserService.getInstance();
@@ -45,7 +43,6 @@ public class LoginController extends HttpServlet {
                 } else {
                     req.getSession().setAttribute("message", "Wrong login data.");
                     resp.sendRedirect("/login");
-                    //req.getRequestDispatcher("WEB-INF/login.jsp").forward(req, resp);
                 }
             } catch (DBException e){
                 logger.warn("Incorrect password or login",e);

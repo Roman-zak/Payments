@@ -16,12 +16,12 @@ public class Query {
                 "from payment as p " +
                 "left join account as a on p.payer_account_id = a.id " +
                 "left join user_has_account as uha on a.id = uha.account_id " +
-                "where uha.user_id = ?";//**********
+                "where uha.user_id = ?";
         public static final String PAYMENT_GET_BY_ID = "select p.id, a.id, a.account_no, p.sum, p.recipient_account_no, p.create_time, p.payment_status_id " +
                 "from payment as p " +
                 "left join account as a on p.payer_account_id = a.id " +
                 "left join user_has_account as uha on a.id = uha.account_id " +
-                "where p.id = ?";//**********
+                "where p.id = ?";
         public static final String UPDATE_ACCOUNT_BALANCE_BY_ACCOUNT_ID = "update account set balance = ? where id = ? ";
         public static final String UPDATE_ACCOUNT_BLOCKED_BY_ACCOUNT_ID = "update account set is_blocked = ? where id = ? ";
 
@@ -81,6 +81,7 @@ public class Query {
                 "is_blocked = ? " +
                 "WHERE id = ?;";
         public static final String USER_DELETE = "delete from user where id = ?;";
+        public static final String USER_DELETE_BY_EMAIL = "delete from user where email = ?;";
         public static final String ACCOUNT_UNBLOCK_REQUEST_UPDATE = "UPDATE request_account " +
                 "SET " +
                 "account_id = ? " +

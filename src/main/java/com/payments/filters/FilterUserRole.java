@@ -3,13 +3,8 @@ package com.payments.filters;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-//import javax.servlet.*;
-//import jakarta.servlet.annotation.WebFilter;
 import com.payments.models.Role;
 import com.payments.models.User;
-
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter(filterName = "FilterUserRole", urlPatterns = "/adminPage")

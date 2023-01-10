@@ -25,7 +25,7 @@ public class UserAccountDAO{
             preparedStatement.setInt(k++, user.getId());
             preparedStatement.setInt(k, account.getId());
             int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+             
             con.commit();
             preparedStatement.close();
         } catch (SQLException e) {
@@ -58,7 +58,7 @@ public class UserAccountDAO{
             preparedStatement.setInt(k++, user_id);
             preparedStatement.setInt(k, account_id);
             int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+             
             con.commit();
             preparedStatement.close();
         } catch (SQLException e) {
@@ -80,7 +80,7 @@ public class UserAccountDAO{
             preparedStatement.setInt(k++, user.getId());
             preparedStatement.setInt(k, account.getId());
             int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+             
 
 
         } catch (SQLException e) {

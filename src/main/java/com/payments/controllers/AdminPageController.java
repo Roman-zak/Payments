@@ -32,7 +32,7 @@ public class AdminPageController extends HttpServlet {
             request.getSession().setAttribute("adminPageMode","users");
         }
         int page = 1;
-        int recordsPerPage = 2;
+        int recordsPerPage = 5;
         int noOfRecords=0;
         logger.debug("page - "+request.getParameter("page"));
         if (request.getParameter("page") != null){
@@ -49,6 +49,7 @@ public class AdminPageController extends HttpServlet {
                 noOfRecords = usersEntry.getValue();
                 request.getSession().setAttribute("allUsers",users);
             } catch (DBException e) {
+                logger.error(e);
                 response.sendError(500,"Can not get users");
             }
 
@@ -60,10 +61,11 @@ public class AdminPageController extends HttpServlet {
                         (page - 1) * recordsPerPage,
                         recordsPerPage);
                 accounts = accountsEntry.getKey();
-                System.out.println("gooten all:"+accounts.size());
+                 logger.debug("gooten all:"+accounts.size());
                 noOfRecords = accountsEntry.getValue();
                 request.getSession().setAttribute("allAccounts",accounts);
             } catch (DBException e) {
+                logger.error(e);
                 response.sendError(500,"Can not get accounts");
             }
         } else if (request.getSession().getAttribute("adminPageMode").equals("unblockRequests")) {
@@ -77,6 +79,7 @@ public class AdminPageController extends HttpServlet {
                 noOfRecords = requestsEntry.getValue();
                 request.getSession().setAttribute("allUnblockRequest",requests);
             } catch (DBException e) {
+                logger.error(e);
                 response.sendError(500,"Can not get unblock requests");
             }
         }
@@ -85,25 +88,6 @@ public class AdminPageController extends HttpServlet {
         request.getSession().setAttribute("currentPage", page);
         request.setAttribute("noOfPages", noOfPages);
         request.setAttribute("currentPage", page);
-//        try {
-//            List<User> allUsers = userService.getAll();
-//            List<Account> allAccounts = accountService.getAll();
-//            List<UnblockAccountRequest> allUnblockRequest = requestService.getAll();
-//           // int noOfPages =
-//            int recordsPerPage = 10;
-//            int page = 1;
-//            if (request.getParameter("page") != null){
-//                page = Integer.parseInt(request.getParameter("page"));
-//            }
-//            request.getSession().setAttribute("adminPageMode",request.getParameter("adminPageMode"));
-//            request.getSession().setAttribute("allUsers",allUsers);
-//            request.getSession().setAttribute("allAccounts",allAccounts);
-//            request.getSession().setAttribute("allUnblockRequest",allUnblockRequest);
-//          //  request.setAttribute("noOfPages", noOfPages);
-//            request.setAttribute("currentPage", page);
-//        } catch (DBException e) {
-//            throw new RuntimeException(e);
-//        }
         request.getRequestDispatcher("WEB-INF/adminPage.jsp").forward(request, response);
     }
 

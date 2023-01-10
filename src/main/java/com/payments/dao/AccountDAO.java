@@ -412,20 +412,20 @@ public class AccountDAO implements DAO<Account>{
                 Account account = getAccountFromResultSet(rs);
                 accounts.add(account);
             }
-
             rs = stmt.executeQuery("SELECT FOUND_ROWS()");
-
             if (rs.next())
                 this.noOfRecords = rs.getInt(1);
             connection.commit();
         } catch (SQLException ex) {
-            throw new DBException("Failed to get users", ex);
+            logger.error(ex);
+            throw new DBException("Failed to get accounts", ex);
         }finally {
             try {
                 rs.close();
                 stmt.close();
                 connection.close();
             } catch (SQLException e) {
+                logger.error(e);
                 throw new DBException("Can not get account id by acc number", e);
             }
         }
@@ -448,7 +448,7 @@ public class AccountDAO implements DAO<Account>{
             preparedStatement.setDouble(k++, acc.getBalance());
             preparedStatement.setString(k++, acc.getOwnerName());
             preparedStatement.setString(k++, acc.getOwnerPhone());
-            System.out.println("in account dao "+acc.getOwnerAddress());
+             logger.debug("in account dao "+acc.getOwnerAddress());
             preparedStatement.setString(k++, acc.getOwnerAddress());
             preparedStatement.setString(k, acc.getPostalCode());
             preparedStatement.executeUpdate();

@@ -43,7 +43,7 @@ public class PayController extends HttpServlet {
         try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
             validator = validatorFactory.getValidator();
         }catch (Exception e){
-            System.out.println(e);
+            logger.error(e);
         }
         Set<ConstraintViolation<Payment>> constraintViolations = validator.validate(payment);
         if (!constraintViolations.isEmpty()) {
@@ -113,6 +113,5 @@ public class PayController extends HttpServlet {
         logger.debug("before sendRedirect");
         response.sendRedirect("/");
         logger.debug("after sendRedirect");
-        //request.getRequestDispatcher("/").forward(request, response);
     }
 }

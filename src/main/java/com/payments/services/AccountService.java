@@ -52,7 +52,6 @@ public class AccountService {
     public void updateAccountBalance(Account payerAccount, double newBalance) throws DBException {
         accountDAO.updateBalance(payerAccount,newBalance);
     }
-//return account id, if it already exists in dataBase, otherwise return -1
     public int getIdByNumber(String accountNo) throws DBException {
         Integer res = accountDAO.getIdByAccountNo(accountNo);
         if(res!=null){
@@ -136,7 +135,7 @@ public class AccountService {
 
     public void deleteById(int accountId, int userId) throws DBException {
         int usersCount = userAccountDAO.getCountOfUsersWithAccount(accountId);
-        System.out.println("usersCount"+usersCount);
+         logger.debug("usersCount"+usersCount);
         if(usersCount>1){
             userAccountDAO.delete(accountId, userId);
         } else if (usersCount==1) {

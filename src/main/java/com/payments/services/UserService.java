@@ -11,7 +11,7 @@ import java.util.Map;
 public class UserService {
     private static final Logger logger = Logger.getLogger(UserService.class);
     private static UserService instance;
-    private final UserDAO userDAO = new UserDAO();
+    private UserDAO userDAO = new UserDAO();
     private int noOfRecords;
 
     public static synchronized UserService getInstance() {
@@ -52,4 +52,15 @@ public class UserService {
         }
         return true;
     }
+
+    public void save(User user) throws DBException {
+
+        userDAO.save(user);
+        logger.info(user+" is registered");
+    }
+    public void delete(User user) throws DBException {
+        userDAO.delete(user);
+        logger.info(user+" is deleted");
+    }
+
 }

@@ -123,4 +123,16 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hash(email, password, name, surname);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", role=" + role +
+                ", blocked=" + blocked +
+                '}';
+    }
 }

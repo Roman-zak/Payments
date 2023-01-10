@@ -1,5 +1,4 @@
 package com.payments.data;
-//import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 

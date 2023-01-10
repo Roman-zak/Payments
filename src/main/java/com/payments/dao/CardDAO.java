@@ -118,7 +118,7 @@ public class CardDAO implements DAO<Card>{
             preparedStatement.setInt(k, card.getExpYear());
 
             int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+             
             setGeneratedCardId( card, preparedStatement );
             con.commit();
 
@@ -271,7 +271,7 @@ public class CardDAO implements DAO<Card>{
             preparedStatement.setInt(k, card.getExpYear());
 
             int count = preparedStatement.executeUpdate();
-            System.out.println(count);
+             
             setGeneratedCardId( card, preparedStatement );
         } catch (SQLException e) {
             logger.warn(e.getMessage());

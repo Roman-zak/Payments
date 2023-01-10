@@ -24,21 +24,12 @@
             <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
-                                                <!--        <dependency>-->
-                                        <!--            <groupId>javax.servlet</groupId>-->
-                                        <!--            <artifactId>jsp-api</artifactId>-->
-                                        <!--            <version>2.0</version>-->
-                                        <!--            <scope>provided</scope>-->
-                                        <!--        </dependency>-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -58,11 +49,11 @@
             <version>3.0.0</version>
         </dependency>
 
-                                                                            <dependency>
-                                                                        <groupId>javax.servlet</groupId>
-                                                                        <artifactId>jstl</artifactId>
-                                                                        <version>1.2</version>
-                                                                    </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.validation</groupId>
@@ -79,11 +70,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.30</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>c3p0</groupId>-->
-<!--            <artifactId>c3p0</artifactId>-->
-<!--            <version>0.9.1.2</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -94,16 +80,40 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
         </dependency>
-        <!--        <dependency>-->
-<!--            <groupId>org.apache.tomcat</groupId>-->
-<!--            <artifactId>tomcat-dbcp</artifactId>-->
-<!--            <version>7.0.37</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-dbcp2</artifactId>-->
-<!--            <version>2.1</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/jakarta.el/jakarta.el-api -->
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>5.0.0-M1</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
