@@ -28,7 +28,7 @@ public class AccountController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getParameter("method").equals("delete")){
+        if(request.getParameter("method")!=null && equals("delete")){
             doDelete(request,response);
             return;
         }

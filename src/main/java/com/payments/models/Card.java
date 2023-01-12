@@ -1,7 +1,6 @@
 package com.payments.models;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
 import java.io.Serializable;
@@ -22,8 +21,6 @@ public class Card implements Serializable {
         this.expMonth = expMonth;
         this.expYear = expYear;
     }
-    @NotEmpty(message = "must not be empty")
-    @Pattern(regexp = "^(0?[1-9]|1[012])$", message = "must be in format \"mm\"")
     public int getExpMonth() {
         return expMonth;
     }
@@ -31,8 +28,7 @@ public class Card implements Serializable {
     public void setExpMonth(int expMonth) {
         this.expMonth = expMonth;
     }
-    @NotEmpty(message = "must not be empty")
-    @Pattern(regexp = "^[0-9]{4}$", message = "must be proper")
+
     public int getExpYear() {
         return expYear;
     }
@@ -68,11 +64,7 @@ public class Card implements Serializable {
         this.id = id;
     }
     @NotBlank(message = "must not be blank")
-    @Pattern(regexp = "(^4[0-9]{12}(?:[0-9]{3})?$)" +
-            "|(^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$)" +
-            "|(3[47][0-9]{13})|(^3(?:0[0-5]|[68][0-9])[0-9]{11}$)" +
-            "|(^6(?:011|5[0-9]{2})[0-9]{12}$)" +
-            "|(^(?:2131|1800|35\\d{3})\\d{11}$)", message = "must be proper")
+    @Pattern(regexp = "(^[0-9]{16}$)", message = "must be proper")
     public String getCardNo() {
         return cardNo;
     }

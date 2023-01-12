@@ -43,7 +43,7 @@
     </tr>
     <tr>
       <td>Owner phone</td>
-      <td><input required="required" pattern="^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
+      <td><input required="required" pattern="^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
                  oninvalid="this.setCustomValidity('Phone number must include country code')"
                  oninput="this.setCustomValidity('')"type="text" name="ownerPhone" /></td>
     </tr>
@@ -63,11 +63,7 @@
 
     <tr>
       <td>Credit card number</td>
-      <td><input required pattern="(^4[0-9]{12}(?:[0-9]{3})?$)
-        |(^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$)
-        |(3[47][0-9]{13})|(^3(?:0[0-5]|[68][0-9])[0-9]{11}$)
-        |(^6(?:011|5[0-9]{2})[0-9]{12}$)
-        |(^(?:2131|1800|35\\d{3})\\d{11}$)" type="text" id="ccnum" name="cardnumber" placeholder="1111222233334444"></td>
+      <td><input required pattern="(^[0-9]{16}$)" type="text" id="ccnum" name="cardnumber" placeholder="1111222233334444"></td>
     </tr>
     <tr>
       <td>Exp Month</td>

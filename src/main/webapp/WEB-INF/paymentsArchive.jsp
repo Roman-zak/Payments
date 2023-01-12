@@ -53,7 +53,7 @@
             <c:forEach var="payment" items="${p:sortPaymentsByDate(sessionScope.payments)}">
 
                 <tr>
-                  <td>value="${payment.payerAccountNumber}"</td>
+                  <td>${payment.payerAccountNumber}</td>
                   <td>${payment.sum}</td>
                   <td>${payment.recipientAccountNo}</td>
                   <td>${payment.timeStamp}</td>
